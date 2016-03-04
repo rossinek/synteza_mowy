@@ -78,8 +78,9 @@ class Phonemes(object):
 		while i > 0:
 			if cls.is_digraph(phonemes[i-1], phonemes[i]):
 				phonemes[i-1] = phonemes[i-1]+phonemes[i]
+				if phonemes[i-1] == "ch":
+					phonemes[i-1] = "h"
 				del phonemes[i]
-				i-=1
 			i-=1
 
 	@classmethod

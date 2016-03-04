@@ -20,3 +20,16 @@ class Syllables(object):
 				last_vowel = i
 			i+=1
 		return phonemes
+
+	@classmethod
+	def count_syllables(cls, phonemes, offset):
+		# assuming that phonemes[i] is phoneme
+		syllables_num = 1
+		i = offset+1
+		while i < len(phonemes):
+			if phonemes[i] == "|":
+				syllables_num += 1
+			elif not Phonemes.is_phoneme(phonemes[i]):
+				break
+			i+=1
+		return syllables_num				

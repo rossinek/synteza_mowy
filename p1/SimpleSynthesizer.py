@@ -3,6 +3,7 @@ import math
 import struct
 import subprocess
 import thread
+import sys
 
 from Phonemes import Phonemes
 from Syllables import Syllables
@@ -101,4 +102,7 @@ class SimpleSynthesizer(object):
 
 	@classmethod
 	def play(cls, path):
-		subprocess.call(["afplay", path])
+		if sys.platform == "darwin":
+			subprocess.call(["afplay", path])
+		elif sys.platform == "linux2":
+			subprocess.call(["aplay", path, "-q"])

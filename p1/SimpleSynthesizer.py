@@ -12,7 +12,6 @@ from Syllables import Syllables
 #import datetime
 
 class SimpleSynthesizer(object):
-	SAMPLE_LEN = 44100 * 10
 
 	SPACERS = {
 		" ": 0.2,

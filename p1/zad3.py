@@ -8,7 +8,7 @@ from Phonemes import Phonemes
 from Syllables import Syllables
 from SimpleSynthesizer import SimpleSynthesizer
 
-print "ZAD2: Prosty syntezator"
+print "ZAD3: Prosty syntezator"
 
 line = ""
 line = raw_input("Wpisz tekst (exit): ")

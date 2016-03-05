@@ -8,9 +8,6 @@ import sys
 from Phonemes import Phonemes
 from Syllables import Syllables
 
-#import random
-#import datetime
-
 class SimpleSynthesizer(object):
 
 	SPACERS = {

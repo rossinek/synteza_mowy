@@ -20,6 +20,15 @@ class WaveEditor(object):
 	def getnvalues(self):
 		return len(self.bytes)/2
 
+	def getbytes(self):
+		return self.bytes
+
+	def append(self, bytes):
+		self.bytes += bytes
+
+	def gen_silence(self, duration):
+		return "".join([struct.pack("h",0)]*int(duration*self.getframerate()))
+
 	def duplicate(self, begin, end, n):
 		new_bytes = []
 		new_bytes += self.bytes[:2*begin]

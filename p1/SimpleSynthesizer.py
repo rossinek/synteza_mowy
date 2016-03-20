@@ -15,7 +15,7 @@ class SimpleSynthesizer(object):
 		",": 0.4,
 		".": 0.6}
 
-	ACCENT_FACTOR = 4.0
+	ACCENT_FACTOR = 2.0
 
 	PHONEMES_PATHS = ["fonemy2016", "fonemy_bodek", "dzwieki1"]
 

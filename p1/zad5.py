@@ -13,7 +13,7 @@ try:
 except:
 	duration = -1
 while duration >= 0:
-	we = WaveEditor("fonemy2016/e.wav")
+	we = WaveEditor("synteza_mowy/p1/fonemy2016/e.wav")
 	duration_difference = duration*we.getframerate() - we.getnvalues()
 	if duration_difference < 0:
 		we.crop(0, duration)
@@ -25,8 +25,8 @@ while duration >= 0:
 		n = int(duration_difference/(end-begin))
 		we.duplicate(begin, end, n)
 	
-	we.save("output.wav")
-	WaveEditor.play("output.wav")
+	we.save("synteza_mowy/p1/output.wav")
+	WaveEditor.play("synteza_mowy/p1/output.wav")
 		
 	try:
 		duration = float(input("Czas przedłużenia (-1): "))

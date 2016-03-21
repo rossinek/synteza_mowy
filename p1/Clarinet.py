@@ -18,7 +18,7 @@ class Clarinet(object):
 		print line
 		tempo = int(re.findall("\d+", line)[0])
 		tempo_factor = 60.0/tempo
-		melody = WaveEditor("klarnet/c.wav")
+		melody = WaveEditor("synteza_mowy/p1/klarnet/c.wav")
 		melody.crop(0, 0)
 
 		line = melody_file.readline()
@@ -31,18 +31,17 @@ class Clarinet(object):
 				if(sound=="p"):
 					melody.append(melody.gen_silence(duration))
 				else:
-					we = WaveEditor("klarnet/"+sound+".wav")
+					we = WaveEditor("synteza_mowy/p1/klarnet/"+sound+".wav")
 					duration_difference = duration*we.getframerate() - we.getnvalues()
 					if duration_difference < 0:
 						we.crop(0, duration)
 						we.fade_out(0.1)
 					else:
-						max_amps = we.max_amps()
 						we.append(we.gen_silence(duration_difference))
 					melody.append(we.getbytes())
 			line = melody_file.readline()
 	
 		melody_file.close()
-		melody.save("output.wav")
-		WaveEditor.play("output.wav")
+		melody.save("synteza_mowy/p1/output.wav")
+		WaveEditor.play("synteza_mowy/p1/output.wav")
 	

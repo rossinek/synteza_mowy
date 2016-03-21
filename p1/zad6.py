@@ -8,4 +8,4 @@ from Clarinet import Clarinet
 
 print "ZAD5: Klarnet"
 
-Clarinet.play("melodie/beethoven.txt")
+Clarinet.play("synteza_mowy/p1/melodie/beethoven.txt")

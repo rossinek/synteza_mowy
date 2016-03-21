@@ -2,6 +2,7 @@ import wave
 import struct
 import subprocess
 import sys
+import copy
 
 from sortedcontainers import SortedList
 
@@ -81,6 +82,31 @@ class WaveEditor(object):
 			last = index
 
 		return max_a
+
+	@classmethod
+	def add_waves(cls, waves):
+		(sample, _) = waves[0]
+		we = copy.deepcopy(sample)
+		we.crop(0, 0)
+		new_bytes = ''
+
+		total_vol = 0
+		max_nvalues = 0
+		for (w,vol) in waves:
+			total_vol+=vol
+			max_nvalues = max([max_nvalues, w.getnvalues()])
+
+		for i in range(0, max_nvalues):
+			s = 0.0
+			for (w,vol) in waves:
+				if len(w.bytes[2*i:2*i+2]) == 2:
+					(v,) = struct.unpack("h", w.bytes[2*i:2*i+2])
+					s += float(v)*vol
+			s = s/total_vol
+			new_bytes += struct.pack("h", int(s))
+
+		we.bytes = new_bytes
+		return we
 
 	@classmethod
 	def play(cls, output_path):

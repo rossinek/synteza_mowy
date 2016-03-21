@@ -47,6 +47,8 @@ class Phonemes(object):
 			phonemes += cls.word_to_phonemes(word)
 			phonemes += [" "]
 
+		if(len(phonemes)>1):
+			del phonemes[len(phonemes)-1]
 		return phonemes
 
 	@classmethod
@@ -59,7 +61,10 @@ class Phonemes(object):
 				if cls.POLISH_LETTERS.has_key(letter):
 					phonemes += [cls.POLISH_LETTERS[letter]]
 				else:
-					phonemes += [letter.encode("ascii","ignore")]
+					if(letter == u"x"):
+						phonemes += ["k", "s"]
+					else:
+						phonemes += [letter.encode("ascii","ignore")]
 			cls.connect_digraphs(phonemes);
 			cls.palatalize(phonemes);
 			cls.lengthen_i(phonemes);
@@ -78,6 +83,8 @@ class Phonemes(object):
 		while i > 0:
 			if cls.is_digraph(phonemes[i-1], phonemes[i]):
 				phonemes[i-1] = phonemes[i-1]+phonemes[i]
+				if(phonemes[i-1] == "ch"):
+					phonemes[i-1] = "h"
 				del phonemes[i]
 			i-=1
 
@@ -117,6 +124,11 @@ class Phonemes(object):
 				phonemes[-1] = cls.VOICELESS_EQUIVALENTS[phonemes[-1]]
 			if phonemes[-1] == "en":
 				phonemes[-1] = "e"
+		if len(phonemes)>2:
+			if phonemes[-1] == "i" and (phonemes[-2] in ["i", "j"]):
+				del phonemes[-1]
+				phonemes[-1] = "i"
+
 
 	@classmethod
 	def backward_voiceless(cls, phonemes):
@@ -154,12 +166,17 @@ class Phonemes(object):
 				if phonemes[i+1] in ["b", "p"]:
 					phonemes.insert(i+1, "m");
 				else:
-					phonemes.insert(i+1, phonemes[i][1:2])
+					if cls.is_palatalized(phonemes[i+1]):
+						phonemes.insert(i+1, "ni")
+					else:
+						phonemes.insert(i+1, "n")
+
+
 				phonemes[i] = phonemes[i][0:1]
 				i+=2
 			i+=1
 
-	PREFIXES_WITH_AU = ["nau","zau","prau","pozau","nienau","niezau","nieprau","niepozau"]
+	PREFIXES_WITH_AU = ["nau","zau","prau", "unau", "pozau","nienau","niezau","nieprau", "nieunau", "niepozau"]
 	@classmethod
 	def has_au_prefix_exception(cls, word):
 		for prefix in cls.PREFIXES_WITH_AU:
@@ -167,7 +184,7 @@ class Phonemes(object):
 				# exceptions:
 				#	.*au.o.*
 				#	.*au.$
-				return not (len(word)==len(prefix)+1 or (len(word)>len(prefix)+1 and word[len(prefix)+1:len(prefix)+2]=="o"))
+				return not (len(word)==len(prefix)+1) # or (len(word)>len(prefix)+1 and word[len(prefix)+1:len(prefix)+2]=="o"))
 		return False
 
 	PREFIXES_WITH_EU = ["przeu","nieprzeu"]
@@ -213,6 +230,10 @@ class Phonemes(object):
 	@classmethod
 	def is_palatalizable(cls, l):
 		return l in cls.PALATALIZABLES
+
+	@classmethod
+	def is_palatalized(cls, l):
+		return re.match("[a-z]+i$", l)
 
 	@classmethod
 	def is_vowel(cls, l):

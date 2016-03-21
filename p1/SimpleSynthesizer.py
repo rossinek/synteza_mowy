@@ -17,12 +17,12 @@ class SimpleSynthesizer(object):
 
 	ACCENT_FACTOR = 2.0
 
-	PHONEMES_PATHS = ["fonemy2016", "fonemy_bodek", "dzwieki1"]
+	PHONEMES_PATHS = ["synteza_mowy/p1/fonemy2016", "synteza_mowy/p1/fonemy_bodek", "synteza_mowy/p1/dzwieki1"]
 
 	@classmethod
 	def synthesize(cls, phonemes, phonemes_set):
 		phonemes_path = cls.PHONEMES_PATHS[phonemes_set%3]
-		output_path = "output.wav"
+		output_path = "synteza_mowy/p1/output.wav"
 		cls._synthesize(phonemes, phonemes_path, output_path)
 		try:
 			thread.start_new_thread(cls.play, (output_path,))

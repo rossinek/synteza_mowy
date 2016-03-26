@@ -1,5 +1,5 @@
 # Synteza Mowy
-UWr speech synthesis course
+UWr speech synthesis course in polish
 
 #Run
 

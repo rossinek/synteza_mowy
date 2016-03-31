@@ -5,6 +5,7 @@ import sys
 import copy
 
 from sortedcontainers import SortedList
+from ..p2 import Progressbar
 
 class WaveEditor(object):
 
@@ -84,7 +85,7 @@ class WaveEditor(object):
 		return max_a
 
 	@classmethod
-	def add_waves(cls, waves):
+	def add_waves(cls, waves, display_progressbar=False):
 		(sample, _) = waves[0]
 		we = copy.deepcopy(sample)
 		we.crop(0, 0)
@@ -96,7 +97,10 @@ class WaveEditor(object):
 			total_vol+=vol
 			max_nvalues = max([max_nvalues, w.getnvalues()])
 
+		progressbar = Progressbar(50, max_nvalues)
+
 		for i in range(0, max_nvalues):
+			progressbar.update(i)
 			s = 0.0
 			for (w,vol) in waves:
 				if len(w.bytes[2*i:2*i+2]) == 2:
@@ -104,8 +108,9 @@ class WaveEditor(object):
 					s += float(v)*vol
 			s = s/total_vol
 			new_bytes += struct.pack("h", int(s))
-
 		we.bytes = new_bytes
+
+		progressbar.finish()
 		return we
 
 	@classmethod

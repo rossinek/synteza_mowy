@@ -6,6 +6,8 @@ import re
 class EnglishSyllables(object):
 	
 	def __init__(self):
+		self.validation_data = None
+
 		self.nlearned = 0
 		self.part_prob = {}
 		self.context_part_prob = {}
@@ -77,10 +79,10 @@ class EnglishSyllables(object):
 		return ' ' + ' '.join(phonemes) + ' '
 
 	def validate(self, validate_set_path):
-		dict_file = open(validate_set_path, "r")
-		
 		total = 0
 		accepted = 0
+
+		dict_file = open(validate_set_path, "r")
 
 		line = dict_file.readline()
 		while line != '':
@@ -92,6 +94,7 @@ class EnglishSyllables(object):
 				res = self.separate_syllables(clean_world)
 				if res.split() == word.split():
 					accepted += 1
+
 			line = dict_file.readline()
 
 		return (accepted, total)

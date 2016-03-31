@@ -1,3 +1,4 @@
+from Progressbar import Progressbar
 from EnglishPhonemes import EnglishPhonemes
 from EnglishSyllables import EnglishSyllables
 from SoundEditor import SoundEditor

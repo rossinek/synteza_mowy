@@ -2,6 +2,7 @@ import re
 import sys
 
 from Instrument import Instrument
+from Progressbar import Progressbar
 from ..p1 import WaveEditor
 import copy
 from os import listdir
@@ -22,7 +23,11 @@ class MusicSynthesizer(object):
 		try:
 			tempo_factor = None;
 			instruments = []
-			for line in melody_file.readlines():
+			flines = melody_file.readlines()
+
+			progressbar = Progressbar(50, len(flines))
+
+			for line in flines:
 				line_s = line.split()
 				if re.match("$|#", line):
 					continue
@@ -37,20 +42,20 @@ class MusicSynthesizer(object):
 					nsounds += 1
 				else:
 					raise ValueError('Wrong melody file syntax')
+				progressbar.update_add1()
+			
+			progressbar.finish()
+
 		except ValueError:
 			melody_file.close()
 			print "\nError reading melody file"
 			return
-				
+
 		print "Writing melodies for each instument..."
-		# setup progressbar
-		nprocessed_sounds = 0
-		progressbar_width = 50
-		sys.stdout.write("%3d%% [%s]" % (0, (" " * progressbar_width)))
-		sys.stdout.flush()
+
+		progressbar = Progressbar(50, nsounds)
 		
 		melodies = []
-
 		for inst in instruments:
 			files_list = [f for f in listdir(WAVES_PATH)]
 			samp = next(x for x in files_list if re.match(inst.name+".*.wav", x))
@@ -69,23 +74,18 @@ class MusicSynthesizer(object):
 					duration_difference = duration*se.getframerate() - se.getnvalues()
 					if duration_difference < 0:
 						se.crop(0, duration)
-						se.fade_out(0.20)
+						se.fade_out(0.05)
 					else:
 						se.append(se.gen_silence(duration_difference/se.getframerate()))
 					melody.append(se.getbytes())
-				
-				# progressbar update
-				nprocessed_sounds += 1
-				sys.stdout.write("\b" * (progressbar_width+7)) # return to start of line, after '['
-				percentage = (nprocessed_sounds*100.0)/nsounds
-				processed_width = int((float(nprocessed_sounds)/nsounds)*progressbar_width)
-				sys.stdout.write("%3d%% [%s]" % (int(percentage), (("#"*processed_width)+(" "*(progressbar_width-processed_width)))))
-				sys.stdout.flush()
+
+				progressbar.update_add1()
 			melodies.append((melody, inst.volume))
 
-		print "\nAdding and normalizing waves..."
-		song = WaveEditor.add_waves(melodies)
-		print "Done!"
+		progressbar.finish()
+
+		print "Adding and normalizing waves..."
+		song = WaveEditor.add_waves(melodies, True)
 		print "Now listen and chill out..."
 		song.save("synteza_mowy/p2/output.wav")
 		WaveEditor.play("synteza_mowy/p2/output.wav")

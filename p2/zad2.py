@@ -2,7 +2,7 @@
 
 from . import EnglishSyllables
 
-print "ZAD3: Syntezator muzyczny"
+print "ZAD2: Uczenie się angielskich sylab"
 
 
 es = EnglishSyllables()

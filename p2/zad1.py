@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ..p1 import Phonemes
+from ..p1.Phonemes import Phonemes
 
 print "ZAD1: Testowanie zadania 1 z pracowni 1"
 

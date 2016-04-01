@@ -5,7 +5,7 @@ import sys
 import copy
 
 from sortedcontainers import SortedList
-from ..p2 import Progressbar
+from ..p2.Progressbar import Progressbar
 
 class WaveEditor(object):
 
@@ -18,7 +18,11 @@ class WaveEditor(object):
 	def getframerate(self):
 		(nchannels, sampwidth, framerate, nframes, comptype, compname) = self.params
 		return framerate
-
+	
+	def getnchannels(self):
+		(nchannels, sampwidth, framerate, nframes, comptype, compname) = self.params
+		return nchannels
+	
 	def getnvalues(self):
 		return len(self.bytes)/2
 
@@ -50,8 +54,8 @@ class WaveEditor(object):
 		self.bytes = "".join(new_bytes)
 
 	def crop(self, begin, end):
-		b = int(begin*self.getframerate())
-		e = int(end*self.getframerate())
+		b = int(begin*self.getframerate()*2)
+		e = int(end*self.getframerate()*2)
 		self.bytes = self.bytes[b:e]
 
 	def save(self, path):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import EnglishSyllables
+from EnglishSyllables import EnglishSyllables
 
 print "ZAD2: Uczenie się angielskich sylab"
 

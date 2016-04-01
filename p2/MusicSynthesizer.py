@@ -3,7 +3,7 @@ import sys
 
 from Instrument import Instrument
 from Progressbar import Progressbar
-from ..p1 import WaveEditor
+from ..p1.WaveEditor import WaveEditor
 import copy
 from os import listdir
 

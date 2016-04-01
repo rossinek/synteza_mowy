@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import MusicSynthesizer
+from MusicSynthesizer import MusicSynthesizer
 import sys
 
 print "ZAD3: Syntezator muzyczny"

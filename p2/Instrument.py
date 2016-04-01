@@ -1,4 +1,4 @@
-from . import SoundEditor
+from SoundEditor import SoundEditor
 
 class Instrument(object):
 	

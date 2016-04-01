@@ -3,7 +3,9 @@ import struct
 import sys
 import subprocess
 
-class SoundEditor(object):
+from ..p1.WaveEditor import WaveEditor
+
+class SoundEditor(WaveEditor):
 	
 	SOUNDS = ["c","c#","d","d#","e","f","f#","g", "g#","a","a#","b"]
 	INSTRUMENT_PATH = "synteza_mowy/p2/instruments/"
@@ -28,11 +30,9 @@ class SoundEditor(object):
 				if not (wav is None):
 					difference = sign*difference
 					break
-		self.params = wav.getparams()
-		self.bytes = wav.readframes(wav.getnframes())
 		wav.close()
-
-
+		WaveEditor.__init__(self, path)
+		
 		if difference != 0:
 			print "Tuning up "+instrument+"'s "+self.SOUNDS[nearest_sound[0]]+str(nearest_sound[1])+" to "+sound+str(octave)+"..."
 			self.tune(difference)
@@ -60,52 +60,3 @@ class SoundEditor(object):
 				new_bytes += struct.pack("h", int(v))
 
 		self.bytes = new_bytes
-
-	def getframerate(self):
-		(nchannels, sampwidth, framerate, nframes, comptype, compname) = self.params
-		return framerate
-
-	def getnchannels(self):
-		(nchannels, sampwidth, framerate, nframes, comptype, compname) = self.params
-		return nchannels
-
-	def getnvalues(self):
-		return len(self.bytes)/2
-
-	def getbytes(self):
-		return self.bytes
-
-	def append(self, bytes):
-		self.bytes += bytes
-
-	def gen_silence(self, duration):
-		return "".join([struct.pack("h",0)]*int(duration*self.getframerate()))
-
-	def fade_out(self, duration):
-		begin = int(self.getnvalues() - duration*self.getframerate())
-		if begin < 0:
-			begin = 0
-		new_bytes = self.bytes[:2*begin]
-		fade_range = self.getnvalues()-begin
-		for i in range(begin, self.getnvalues()):
-			(v,) = struct.unpack("h", self.bytes[2*i:2*i+2])
-			new_bytes += (struct.pack("h", int(v*(1-float(i-begin)/fade_range))))
-		self.bytes = "".join(new_bytes)
-
-	def crop(self, begin, end):
-		b = int(begin*self.getframerate()*2)
-		e = int(end*self.getframerate()*2)
-		self.bytes = self.bytes[b:e]
-
-	def save(self, path):
-		wave_output = wave.open(path, "w")
-		wave_output.setparams(self.params)
-		wave_output.writeframes("".join(self.bytes))
-		wave_output.close()
-
-	@classmethod
-	def play(cls, output_path):
-		if sys.platform == "darwin":
-			subprocess.call(["afplay", output_path])
-		elif sys.platform == "linux2":
-			subprocess.call(["aplay", output_path, "-q"])

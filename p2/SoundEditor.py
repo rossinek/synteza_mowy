@@ -24,7 +24,7 @@ class SoundEditor(WaveEditor):
 						path = self.INSTRUMENT_PATH+instrument+"-"+self.SOUNDS[nearest_sound[0]]+str(nearest_sound[1])+suf+'.wav'
 						wav = wave.open(path, "r")
 					except:
-						if difference==0 and sign<0:
+						if difference==0 and suf=='_gen' and sign<0:
 							msg = "Searching for nearest sound for "+instrument+"'s "+sound+str(octave)
 							if progressbar:
 								progressbar.message(msg)

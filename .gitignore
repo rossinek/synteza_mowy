@@ -4,4 +4,4 @@ output.wav
 *.pyc
 *.class
 *.jar
-instruments/*_gen.wav
+p2/instruments/*_gen.wav

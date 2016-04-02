@@ -4,7 +4,7 @@ import sys
 import subprocess
 import re
 
-from WaveEditor import WaveEditor
+from _WaveEditor import WaveEditor
 
 print "ZAD5: Przedłużanie samogłoski"
 

@@ -1,0 +1,13 @@
+# Prosta melodia
+
+TEMPO = 80
+
+inst alto_flute 1
+
+f3 0.1
+f3 0.2
+f3 0.3
+f3 1.0
+f#3 0.5
+g3 0.5
+g#3 0.5

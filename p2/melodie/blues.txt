@@ -1,6 +1,6 @@
 # blues
 
-TEMPO = 120
+TEMPO = 240
 
 inst basses-piz-rr1 5
 

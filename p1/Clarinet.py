@@ -29,7 +29,7 @@ class Clarinet(object):
 				duration = float(el[1])*tempo_factor*4.0
 				
 				if(sound=="p"):
-					melody.append(melody.gen_silence(duration))
+					melody.concat(melody.gen_silence(duration))
 				else:
 					we = WaveEditor("synteza_mowy/p1/klarnet/"+sound+".wav")
 					duration_difference = duration*we.getframerate() - we.getnvalues()
@@ -37,8 +37,8 @@ class Clarinet(object):
 						we.crop(0, duration)
 						we.fade_out(0.1)
 					else:
-						we.append(we.gen_silence(duration_difference))
-					melody.append(we.getbytes())
+						we.concat(we.gen_silence(duration_difference))
+					melody.concat(we.getvalues())
 			line = melody_file.readline()
 	
 		melody_file.close()

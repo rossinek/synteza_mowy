@@ -38,7 +38,7 @@ class MusicSynthesizer(object):
 					inst = Instrument(line_s[1], int(line_s[2]))
 					instruments.append(inst)
 				elif re.match("[a-g]#?\d|p", line_s[0]):
-					instruments[-1].add_sound(line_s[0], line_s[1])
+					instruments[-1].add_sound(line_s[0], line_s[1], progressbar)
 					nsounds += 1
 				else:
 					raise ValueError('Wrong melody file syntax')
@@ -54,37 +54,34 @@ class MusicSynthesizer(object):
 		print "Writing melodies for each instument..."
 
 		progressbar = Progressbar(50, nsounds)
-		
+
 		melodies = []
 		for inst in instruments:
-			files_list = [f for f in listdir(WAVES_PATH)]
-			samp = next(x for x in files_list if re.match(inst.name+".*.wav", x))
-			melody = WaveEditor(WAVES_PATH+"/"+samp)
-			melody.crop(0, 0)
-
+			melody = WaveEditor(inst.getparams())
 			i_sounds = inst.get_sounds()
 			i_melody = inst.get_melody()
 
 			for (sound, length) in i_melody:
 				duration = float(length)*tempo_factor*4.0
 				if(sound=="p"):
-					melody.append(melody.gen_silence(duration))
+					melody.concat(melody.gen_silence(duration))
 				else:
-					se = copy.deepcopy(i_sounds[sound])
-					duration_difference = duration*se.getframerate() - se.getnvalues()
+					we = i_sounds[sound].clone_we()
+
+					duration_difference = duration*we.getframerate() - we.getnvalues()
 					if duration_difference < 0:
-						se.crop(0, duration)
-						se.fade_out(0.05)
+						we.crop(0, duration)
+						we.fade_out(0.1)
 					else:
-						se.append(se.gen_silence(duration_difference/se.getframerate()))
-					melody.append(se.getbytes())
+						we.concat(we.gen_silence(duration_difference/we.getframerate()))
+					melody.concat(we.getvalues())
 
 				progressbar.update_add1()
 			melodies.append((melody, inst.volume))
 
 		progressbar.finish()
 
-		print "Adding and normalizing waves..."
+
 		song = WaveEditor.add_waves(melodies, True)
 		print "Now listen and chill out..."
 		song.save("synteza_mowy/p2/output.wav")

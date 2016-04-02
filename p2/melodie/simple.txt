@@ -1,0 +1,22 @@
+# Prosta melodia
+
+TEMPO = 120
+
+inst basses-sus 4
+
+c2 0.75
+d2 0.75
+c2 0.75
+
+
+inst alto_flute 4
+
+g5 0.25
+e5 0.25
+e5 0.25
+f5 0.25
+d5 0.25
+d5 0.25
+c5 0.125
+e5 0.125
+c5 0.5

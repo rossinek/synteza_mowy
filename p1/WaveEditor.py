@@ -69,6 +69,19 @@ class WaveEditor(object):
 	def duplicate(self, begin, end, n):
 		self.values = self.values[:(begin*self.getnchannels())]+self.values[(begin*self.getnchannels()):(end*self.getnchannels())]*n+self.values[(end*self.getnchannels()):]
 
+	def fade_in(self, duration):
+		end = int(duration*self.getframerate())
+		if end > self.getnvalues():
+			end = self.getnvalues()
+		new_values = []
+		fade_range = end
+		for i in range(0, end):
+			factor = float(i)/fade_range
+			for c in range(0, self.getnchannels()):
+				new_values.append(self[i, c]*factor)
+		new_values += self.values[end:]
+		self.values = new_values
+
 	def fade_out(self, duration):
 		begin = int(self.getnvalues() - duration*self.getframerate())
 		if begin < 0:
@@ -76,9 +89,9 @@ class WaveEditor(object):
 		new_values = self.values[:(begin*self.getnchannels())]
 		fade_range = self.getnvalues()-begin
 		for i in range(begin, self.getnvalues()):
+			factor = (1.0-float(i-begin)/fade_range)
 			for c in range(0, self.getnchannels()):
-				factor = (1.0-float(i-begin)/fade_range)
-				new_values.append(self[i, c]*factor*factor)
+				new_values.append(self[i, c]*factor)
 		self.values = new_values
 
 	def crop(self, begin, end):
@@ -88,6 +101,12 @@ class WaveEditor(object):
 
 	def mult(self, factor):
 		self.values = map(lambda x: x*factor, self.values)
+
+	def mult_between(self, begin, end, factor):
+		new_values = self.values[:begin]
+		new_values += map(lambda x: x*factor, self.values[begin:end])
+		new_values += self.values[end:]
+		self.values = new_values
 	
 	def save(self, path):
 		wave_output = wave.open(path, "w")

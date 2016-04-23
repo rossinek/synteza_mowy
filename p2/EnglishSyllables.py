@@ -75,6 +75,7 @@ class EnglishSyllables(object):
 			else:
 				partition_index = 0
 		
+
 		phonemes.insert(partition_index, '-')
 		return ' ' + ' '.join(phonemes) + ' '
 

@@ -36,7 +36,6 @@ class EnPhonemes(object):
 		"rz":	"j",
 		"s":	"ts",
 		"si":	"tsi",
-		"sz":	"sh",
 		"t":	"t",
 		"u":	"oo",
 		"w":	"the",
